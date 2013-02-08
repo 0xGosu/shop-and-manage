@@ -1,0 +1,9 @@
+Manaer,Employee,User : Web user
+Mobile : Mobile user
+
+shop_product.html , product.html, shop_list_product.html, list_product.html : Webpage
+HTTP request: implement in Mobile application
+
+Get É, Modify/Create É, Login, Get List É : required action
+
+

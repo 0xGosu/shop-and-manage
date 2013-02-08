@@ -1,0 +1,64 @@
+﻿{% extends "base_manage.html" %}
+	{%block title%}List Customer{%endblock%}
+		
+		{%block content_header %}List Customer{%endblock%}
+		{%block content_description %}{% endblock %}
+		
+		{%block content%}
+		<a name="main"></a>
+		<h2>{{ status }}</h2>
+		<form name="input" action="/customer/list/#main" method="get">
+			<fieldset> <legend> Tùy Chọn </legend>
+				Hiển Thị: <select name="max">
+					<option value="20" {% ifequal request.max 20 %}selected{% endifequal %} >20</option>
+					<option value="50" {% ifequal request.max 50 %}selected{% endifequal %} >50</option>
+					<option value="100" {% ifequal request.max 100 %}selected{% endifequal %} >100</option>
+					<option value="200" {% ifequal request.max 200 %}selected{% endifequal %} >200</option>
+					</select>
+					 				Trang: <input type="text" size="5" name="page" value="{{request.page}}" />
+					<a href="/customer/list/?max={{request.max}}&page={{request.page|add:"1"}}&level_filter={{request.level_filter}}&name_filter={{request.name_filter}}&phone_filter={{request.phone_filter}}&show_hidden={{request.show_hidden}}#main">(next page)</a> <br />
+					Tìm Theo Tên: <input type="text" size="25" name="name_filter" value="{{request.name_filter}}" /> <br />
+					Tìm Theo Số ĐT: <input type="text" size="25" name="phone_filter" value="{{request.phone_filter}}" /> <br />
+					Tìm Theo Cấp Độ:	<select name="level_filter">
+					<option value="" >Xem Tất Cả</option>
+					{% for lv in customer_level_list %}
+					<option value="{{lv}}" {% ifequal request.level_filter lv %}selected{% endifequal %} >{{ lv }}</option>
+					{% endfor %}
+				</select> Hiện Mục Đã Xóa: <input type="checkbox" name="show_hidden" {% if request.show_hidden %}checked{% endif %} />  <br />
+				<br />	
+					<input type="submit" value="Xem" />
+			</fieldset>	
+		</form>
+		 
+		<table border="1" style="background-color: white;">
+			<tr>
+				<th>Mã KH</th>
+				<th>Tên</th>
+				<th>Phone</th>
+				<th>Cấp Độ</th>
+				<th>Sale Đặc Biệt</th>
+				<th>Ngày Tạo</th>
+				<th>Thanh Toán</th>
+				<th>Số Lượng</th>
+				<th>Email</th>
+				<th>Ghi Chú</th>
+			</tr>
+			{% for customer in customers %}
+			<tr>
+				<td><a href="/customer/?code={{customer.code}}#main">{{customer.code}}</a></td>
+				<td style="text-align:center">{{customer.name}}</td>
+				<td style="text-align:center">{{customer.email}}</td>
+				<td>{{customer.created|date:"d/m/Y H:i"}}</td>
+				<td style="text-align:center">{{customer.level}}</td>
+				<td style="color:green;text-align:center">{{customer.private_sale}}</td>
+				<td style="color:red;text-align:center">{{customer.product_bought}}</td>
+				<td style="color:blue;text-align:center">{{customer.money_paid|floatformat:3}}</td>
+				<td style="text-align:center">{{customer.phone}}</td>
+				<td>{{customer.note}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+			
+			             			
+		
+		{% endblock %}

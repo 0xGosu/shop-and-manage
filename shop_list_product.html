@@ -1,0 +1,79 @@
+{% extends "menu_template2.html" %}
+	{% block head_extra %}
+	<link rel="stylesheet" type="text/css" href="/files/shop_list_product.css">
+	{% endblock %}
+	{%block title%}{{category_header}}{%endblock%}
+		
+{% block sub_menu_header%}{{sub_menu_header}}{%endblock%}		
+
+
+		
+		{%block content_header %}{{category_header}}{%endblock%}
+		{%block content_description %}{% endblock %}
+		{%block content%}
+		
+			<hr/>
+				<form name="input" action="/product/list/" method="get">
+			<fieldset> <legend> Tùy Chọn </legend>
+				<input type="hidden" name="shop" value="yes"/>
+				<input type="hidden" name="category_filter" value="{{request.category_filter}}"/>
+				Hiển Thị: <select name="max">
+					<option value="20" {% ifequal request.max 20 %}selected{% endifequal %} >20</option>
+					<option value="50" {% ifequal request.max 50 %}selected{% endifequal %} >50</option>
+					<option value="100" {% ifequal request.max 100 %}selected{% endifequal %} >100</option>
+					<option value="200" {% ifequal request.max 200 %}selected{% endifequal %} >200</option>
+					</select>
+					 				Trang: <input type="text" size="5" name="page" value="{{request.page}}" />
+					<a href="/product/list/?shop=yes&max={{request.max}}&page={{request.page|add:"1"}}&category_filter={{request.category_filter}}&spec_filter={{request.spec_filter}}&sort_by={{request.sort_by}}">(next page)</a>
+									<br />
+				Specific Filter: <input type="text" size="20" name="spec_filter" value="{{request.spec_filter}}" /> <br />
+				{% if request.shop != "sale" %}
+				Sắp Xếp: <select name="sort_by">
+					<option value="code" >Mã Hàng</option>
+					<option value="created" {% ifequal request.sort_by "created" %}selected{% endifequal %} >Ngày Tạo</option>
+					<option value="on_sale" {% ifequal request.sort_by "on_sale" %}selected{% endifequal %} >% Sale Off</option>
+				</select> 
+				{% endif %}
+				<input type="submit" value="Xem" />
+			</fieldset>	
+		</form> 
+		{% if not request.shop %}<h2>{{ status }}</h2>{%endif%}
+		{% for product in products %}
+		{% if product.photo %}
+		<div class="product">
+				<a id="wht2" href="/product/?shop=yes&category={{product.category}}&code={{product.code}}" title="{{product.description}}" class="thLightBox product-image">
+					<img class="product-photo" src="{{product.photo}}" alt="{{product.description}}">
+						<h2 class="product-name">{{product.code}}</h2>
+						</a>
+                <div class="price-box">
+					{% if product.on_sale %}
+					<div class="price_brand"><span class="price">{{product.sell_price|floatformat:3}}₫</span></div> 
+					<div class="regular-price">
+						<span class="price">
+						<script type="text/javascript">
+						document.write(Math.round( {{product.sell_price}} * (1 -{{product.on_sale}}/100 ) )   );				
+							</script>.000₫
+					</span>					</div>
+					<div class="off-price">{{product.on_sale}}% Off</div>
+					{% else %}
+					<div class="regular-price">
+						<span class="price" style="padding-left:50px" >{{product.sell_price|floatformat:3}}₫</span>					</div>
+					{% endif %}
+				</div>
+				{% if product.quantity == 0 %} <div class="out-of-stock">Đã hết hàng</div> {% endif %}
+				
+            </div>
+			{% cycle '' '' '<br/>' %}
+			{% endif %}
+			{% endfor %}
+
+			
+		</table>
+		
+
+		
+
+		
+			
+			             			
+		{%endblock content%}

@@ -1,0 +1,107 @@
+﻿{% extends "base_manage.html" %}
+	{%block title%}Order{%endblock%}
+			
+		{%block content_header %}Order{%endblock%}
+		{%block content_description %}
+<script type="text/javascript">
+
+function confirmSubmit(){
+	var agree=confirm("Are you sure?");
+	if (agree)
+		return true ;
+	else
+		return false ;
+}
+
+function saleOff(){
+	sale_off = prompt("How many % sale off: ");
+	sale_off = parseInt(sale_off, 10);
+	
+	if(sale_off<0 || sale_off>100)return false;
+	
+	var fields = document.querySelectorAll('input[name^=price]')
+	total=0.0;
+	for (i = 0; i < fields.length; i += 1) { 
+		fields[i].value = fields[i].value * (1-sale_off/100)
+		total+=parseFloat(fields[i].value);
+	}
+	
+	alert("Sale "+sale_off+"% off to "+total);
+	return true;
+}
+
+</script>
+		{% endblock %}
+		
+		{%block content%}
+		<a name="main"></a>
+		<h2>Status: {{ status }}</h2>						
+		<form name="input" action="/order/#main" method="get">
+			<fieldset>
+				<legend>Tìm Đơn Hàng</legend> 
+				Mã Số: <input type="text" name="code" value="" />
+				<input type="submit" value="Tìm" />
+			</fieldset>	
+		</form>
+		<br />
+		<form name="input" action="/order/?code={{order.code}}#main" method="post">
+			<fieldset>
+			<fieldset style="background-color: white;">
+			Mã Đơn Hàng: <b>{{order.code}}</b> <br />
+			Ngày Tạo: {{ order.created|date:"d/m/Y H:i" }}  <br />
+			Ngày Sửa: {{ order.modified|date:"d/m/Y H:i" }} <br />
+			<a href="/order/?code={{order.code}}&version=print">Click to view Print Version</a> <br /> 
+			</fieldset>
+			<br/>
+			<fieldset style="background-color: white;">
+			Mã KH:<input type="text" size="10" name="customer" value="{{order.customer}}" />
+				<a href="/customer/?code={{order.customer}}#main">(find customer)</a> <br /> 
+			Tên KH: <b>{{customer.name}}</b> Email:  {{customer.email}} <br/>
+			Cấp Độ: <b>{{customer.level}}</b> Sale Đặc Biệt: <b>{{customer.private_sale}}%</b> <br/>
+			</fieldset>
+			<br/>
+			<b>Tổng Cộng: {{total|floatformat:3}} </b> <button type="button" onClick="saleOff();">% Sale Off!!!</button> <br/>
+			Xác Nhận: <input type="checkbox" name="confirm" {% if order.confirm %}checked{% endif %} />
+			Xóa: <input type="checkbox" name="hidden" {% if order.hidden %}checked{% endif %} /> <br />
+			<hr />	
+			Chi Tiết: <br />
+				<table border="1">
+					<tr>
+						<th>Mã Hàng</th>
+						<th>Hình Ảnh</th>
+						<th>Giá Bán</th>
+						<th>Size/Màu Sắc</th>
+						<th>Số Lượng</th>
+						<th>Thành Tiền</th>
+						<th>Tình Trạng</th>
+					</tr>
+					{% for row in info_table %}
+					<tr>
+						<td><input type="text" name="item{{row.index}}" value="{{row.item}}" /></td>
+						<td><a href="/product/?code={{row.item}}#main"><img src="{{row.photo}}" alt="N/A" width="40" height="40" border="0"></a></td>
+						<td><input type="text" size="8" name="price{{row.index}}" value="{{row.price|floatformat:"-3"}}" /> </td>
+						<td>
+							<select name="chosen{{row.index}}">
+							<optgroup label="Current">
+							<option value="{{row.chosen}}" >{{ row.chosen }}</option>
+							</optgroup>
+							<optgroup label="Other Available">
+							{% for spec_choice in row.spec_choices %}
+							<option value="{{spec_choice}}" >{{ spec_choice }}</option>
+							{% endfor %}
+							</optgroup>
+						</select></td>
+						 
+						<td><input type="text" size="4" name="quantity{{row.index}}" value="{{row.quantity}}" /></td>
+						<td style="color:blue;text-align:center">{{row.money|floatformat:"3"}}</td>
+						<td>{{row.status}}</td>
+					</tr>
+					{% endfor %}
+				</table>
+			<hr />
+			Note:<br />
+			<div><textarea name="note" rows="5" cols="50">{{order.note}}</textarea></div>
+			<input type="submit" value="Tạo/Sửa" onClick="return confirmSubmit()" />
+			</fieldset>
+		</form> 		
+		{% endblock %}

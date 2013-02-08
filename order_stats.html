@@ -1,0 +1,58 @@
+{% extends "base_manage.html" %}
+	
+	{%block title%}Order Statistic{%endblock%}
+		
+		{%block content_header %}Order Statistic{%endblock%}
+		{%block content_description %}{% endblock %}
+		{%block content%}
+		<a name="main"></a>
+		<h2>{{ status }}</h2>
+				<form name="input" action="/stats/order/#main" method="get">
+			<fieldset> <legend> Tùy Chọn </legend>
+				Hiển Thị: <select name="days">
+					<option value="7" {% ifequal request.days 7 %}selected{% endifequal %} >1 tuần</option>
+					<option value="14" {% ifequal request.days 14 %}selected{% endifequal %} >2 tuần</option>
+					<option value="30" {% ifequal request.days 30 %}selected{% endifequal %} >1 tháng</option>
+					<option value="90" {% ifequal request.days 90 %}selected{% endifequal %} >3 tháng</option>
+					<option value="182" {% ifequal request.days 182 %}selected{% endifequal %} >6 tháng</option>
+					<option value="365" {% ifequal request.days 365 %}selected{% endifequal %} >1 năm</option>
+					</select>
+				<input type="submit" value="Xem" />
+			</fieldset>	
+		</form> 
+		
+		<table border="1" style="background-color: white;">
+			<tr>
+				<th>Ngày</th>
+				<th style="max-width:80px">Tổng Đơn Hàng</th>
+				<th>Tiền Thu Được</th>
+				<th>Số Lượng</th>
+				<th>Tiền Lời</th>
+				<th style="max-width:90px">Tiền Nhập Hàng</th>
+				<th style="max-width:90px">SL Hàng Mới</th>
+			</tr>
+			{% for row in table %}
+			<tr>
+				<td>{{row.datetime|date:"d/m/Y"}}</td>
+				<td style="text-align:center">{{row.num_order}}</td>
+				<td style="color:blue;text-align:center">{{row.sum_money|floatformat:3}}</td>
+				<td style="color:red;text-align:center">{{row.sum_quantity}}</td>
+				<td style="color:blue;text-align:center">{{row.sum_benefit|floatformat:3}}</td>
+				<td style="color:blue;text-align:center">{{row.sum_product_root_money|floatformat:3}}</td>
+				<td style="color:red;text-align:center">{{row.sum_product_quantity}}</td>
+			</tr>
+			{% endfor %}
+			<tr>
+				<td><b>Tổng Cộng</b></td>
+				<td style="text-align:center">{{total.order}}</td>
+				<td style="color:blue;text-align:center">{{total.money|floatformat:3}}</td>
+				<td style="color:red;text-align:center">{{total.quantity}}</td>
+				<td style="color:blue;text-align:center">{{total.benefit|floatformat:3}}</td>
+				<td style="color:blue;text-align:center">{{total.product_root_money|floatformat:3}}</td>
+				<td style="color:red;text-align:center">{{total.product_quantity}}</td
+			</tr>
+			
+		</table>
+			
+			             			
+		{%endblock content%}

@@ -1,0 +1,182 @@
+python_preamble:
+- import: base64
+- import: re
+- import: google.appengine.ext.bulkload.transform
+- import: google.appengine.ext.bulkload.bulkloader_wizard
+- import: google.appengine.ext.db
+- import: google.appengine.api.datastore
+- import: google.appengine.api.users
+
+transformers:
+
+- kind: Customer
+  connector: csv
+  connector_options:
+    encoding: utf-8
+    columns: from_header
+  property_map:
+    - property: __key__
+      external_name: key
+      export_transform: transform.key_id_or_name_as_string
+
+    - property: address
+      external_name: address
+      import_transform: db.Text
+
+    - property: code
+      external_name: code
+
+    - property: created
+      external_name: created
+      import_transform: transform.import_date_time('%Y-%m-%dT%H:%M:%S')
+      export_transform: transform.export_date_time('%Y-%m-%dT%H:%M:%S')
+
+    - property: email
+      external_name: email
+      import_transform: db.Email
+
+    - property: hidden
+      external_name: hidden
+      import_transform: transform.regexp_bool('true', re.IGNORECASE)
+
+    - property: level
+      external_name: level
+
+    - property: modified
+      external_name: modified
+      import_transform: transform.import_date_time('%Y-%m-%dT%H:%M:%S')
+      export_transform: transform.export_date_time('%Y-%m-%dT%H:%M:%S')
+
+    - property: name
+      external_name: name
+
+    - property: note
+      external_name: note
+      import_transform: db.Text
+
+    - property: phone
+      external_name: phone
+
+    - property: who_created
+      external_name: who_created
+      import_transform: transform.none_if_empty(users.User)  # Assumes email address
+
+    - property: who_modified
+      external_name: who_modified
+      import_transform: transform.none_if_empty(users.User)  # Assumes email address
+
+
+- kind: Order
+  connector: csv
+  connector_options:
+    encoding: utf-8
+    columns: from_header
+  property_map:
+    - property: __key__
+      external_name: key
+      export_transform: transform.key_id_or_name_as_string
+
+    - property: code
+      external_name: code
+
+    - property: confirm
+      external_name: confirm
+      import_transform: transform.regexp_bool('true', re.IGNORECASE)
+
+    - property: created
+      external_name: created
+      import_transform: transform.import_date_time('%Y-%m-%dT%H:%M:%S')
+      export_transform: transform.export_date_time('%Y-%m-%dT%H:%M:%S')
+
+    - property: customer
+      external_name: customer
+
+    - property: hidden
+      external_name: hidden
+      import_transform: transform.regexp_bool('true', re.IGNORECASE)
+
+    - property: list_chosen
+      external_name: list_chosen
+
+    - property: list_item
+      external_name: list_item
+
+    - property: list_price
+      external_name: list_price
+      import_transform: transform.none_if_empty(float)
+
+    - property: list_quantity
+      external_name: list_quantity
+      import_transform: transform.none_if_empty(int)
+
+    - property: list_root_price
+      external_name: list_root_price
+      import_transform: transform.none_if_empty(float)
+
+    - property: modified
+      external_name: modified
+      import_transform: transform.import_date_time('%Y-%m-%dT%H:%M:%S')
+      export_transform: transform.export_date_time('%Y-%m-%dT%H:%M:%S')
+
+    - property: note
+      external_name: note
+      import_transform: db.Text
+
+
+- kind: Product
+  connector: csv
+  connector_options:
+    encoding: utf-8
+    columns: from_header
+  property_map:
+    - property: __key__
+      external_name: key
+      export_transform: transform.key_id_or_name_as_string
+
+    - property: category
+      external_name: category
+
+    - property: code
+      external_name: code
+
+    - property: created
+      external_name: created
+      import_transform: transform.import_date_time('%Y-%m-%dT%H:%M:%S')
+      export_transform: transform.export_date_time('%Y-%m-%dT%H:%M:%S')
+
+    - property: description
+      external_name: description
+
+    - property: modified
+      external_name: modified
+      import_transform: transform.import_date_time('%Y-%m-%dT%H:%M:%S')
+      export_transform: transform.export_date_time('%Y-%m-%dT%H:%M:%S')
+
+    - property: on_sale
+      external_name: on_sale
+      import_transform: transform.none_if_empty(int)
+
+    - property: photo
+      external_name: photo
+
+    - property: quantity
+      external_name: quantity
+      import_transform: transform.none_if_empty(int)
+
+    - property: root_price
+      external_name: root_price
+      import_transform: transform.none_if_empty(float)
+
+    - property: sell_price
+      external_name: sell_price
+      import_transform: transform.none_if_empty(float)
+
+    - property: who_created
+      external_name: who_created
+      import_transform: transform.none_if_empty(users.User)  # Assumes email address
+
+    - property: who_modified
+      external_name: who_modified
+      import_transform: transform.none_if_empty(users.User)  # Assumes email address
+
+

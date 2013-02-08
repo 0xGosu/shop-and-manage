@@ -1,0 +1,76 @@
+{% extends "menu_template2.html" %}
+{% block head_extra %}
+<link rel="stylesheet" type="text/css" href="/files/shop_product.css">
+<script type="text/javascript" src="/files/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="/files/shop_product.js"></script>
+	
+	{% endblock %}
+	{%block title%}{{product.code}}{%endblock%}
+
+{% block sub_menu_header%}{{sub_menu_header}}{%endblock%}
+		
+		{%block content_header %}{{category_header}}{%endblock%}
+		{%block content_description %}<h2>{{ status }}</h2>{% endblock %}
+		{%block content%}
+	<div class="img-detail">    
+		<div class="bDetail">
+			<img class="imgmain" src="{{product.photo}}" alt="{{product.description}}" title="">
+				</div>
+		<div class="left-img">
+			
+		</div>
+		<br class="clr">
+	</div>		
+	<div class="txt-detail">
+		<h1>{{product.code}}</h1>
+		<p>{{product.description}}</p>
+			
+			{% if product.on_sale %}
+			<p><label>Giá cũ :</label><span class="old">{{product.sell_price|floatformat:3}}đ</span></p>
+				<p><label>Giá :</label><span class="new" style="color: #409700;">
+				<script type="text/javascript">
+					document.write(Math.round( {{product.sell_price}} * (1 -{{product.on_sale}}/100 ) )   );				
+					</script>.000đ</span> ({{product.on_sale}}% off)</p>
+			{% else %}
+			<p><label>Giá :</label><span class="new" style="color: #409700;">{{product.sell_price|floatformat:3}}đ</span></p>
+			{%endif%}
+			<p><label>Số lượng :</label><span>
+				{% if product.quantity == 0 %}Hết hàng {% endif %}
+				{% if product.quantity == 1 %}Duy nhất 1 (mua ngay kẻo hết) {% endif %}
+				{% if product.quantity >= 2 %}Còn nhiều {% endif %}
+				</span></p>  
+			    
+		
+		
+        <div class="detail-color">
+            <div id="attribute">
+				<div class="row">    <span>Size và Màu Sắc:</span>
+				<select id="chosen" name="chosen">
+							{% for spec_choice in product.spec_choices %}
+							<option value="{{spec_choice}}" >{{ spec_choice }}</option>
+							{% endfor %}
+						</select>
+				</div>
+			</div>
+        </div>
+		<p>
+				<input type="hidden" id="code" name="code" value="{{product.code}}">
+                    <a href="javascript:;" class="btn-pay" onclick="addCartItem(); window.location.reload();"></a>
+                </p>
+		
+	</div>
+	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+	<div class="blk-main">
+		<div class="title-main">
+			<h3 class="type2" style="background-color: #ff44ae;">
+				THÔNG TIN THÊM
+			</h3>
+		</div>
+		<div class="brank pdetail" style="border-top-color: #ff44ae;">
+		{{ product.detail|safe }} 		 
+		</div>
+		
+	</div>
+	
+	
+	{%endblock content%}

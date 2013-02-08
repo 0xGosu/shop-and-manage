@@ -1,0 +1,5 @@
+cron:
+
+- description: check birth day customer
+  url: /tasks/birthday_check/
+  schedule: every day 00:00

@@ -1,0 +1,39 @@
+application: shop-and-manage
+version: 1dot03a-vietnamese
+runtime: python
+api_version: 1
+
+handlers:
+- url: /[^/]*
+  script: main.py
+- url: /product/.*
+  script: product.py
+- url: /order/.*
+  script: order.py
+- url: /customer/.*
+  script: customer.py
+- url: /stats/.*
+  script: statistic.py
+- url: /user/.*
+  script: user.py
+  
+
+- url: /tasks/birthday_check/
+  script: cron_job_check_birth_day.py
+  login: admin
+  
+- url: /files/
+  static_dir: static
+- url: /css/
+  static_dir: static
+- url: /images/
+  static_dir: static/images
+
+
+- url: /favicon\.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon\.ico
+  
+builtins:
+- admin_redirect: on
+- remote_api: on

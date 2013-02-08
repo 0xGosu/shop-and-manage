@@ -1,0 +1,62 @@
+﻿{% extends "base_manage.html" %}
+	{%block title%}User{%endblock%}
+		{%block content_header %}User{%endblock%}
+		{%block content_description %}User Account Information{% endblock %}
+		
+		{%block content%}
+		<table border="0">
+		<tr>
+			<td style="text-align: right;">Tên Khách Hàng :</td>
+			<td>{{user.nickname}}</td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">Email :</td>
+			<td>{{user.email}}</td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">Tài Khoản :</td>
+			<td><a href="{{federated_provider}}">{{user.federated_identity}}</a> </td>
+		</tr>
+		</table>
+		<hr/>
+		<h2>{{ greeting }}</h2>
+		<h3>{{ status }}</h3>
+		{%if customer %}
+		<div border="1">
+			Mã KH : {{customer.code}}  <br />
+			Ngày Tạo : {{ customer.created|date:"d/m/Y H:i" }}  <br />
+			Cấp Độ : {{ customer.level }} <br />			
+			<br/>
+			Tên KH :{{customer.name}} <br/>
+			Phone : {{customer.phone}} <br/>
+			Birthday : {{customer.birth_day}}/{{customer.birth_month}} <br />
+			Địa Chỉ :<br />
+				<div><p>{{customer.address}}</p></div>
+			<hr />
+			<b>Tổng Cộng : {{total|floatformat:3}} </b> <br/>
+			DS Đơn Hàng : <br />
+				<table border="1">
+					<tr>
+						<th>Mã Số</th>
+						<th>Ngày Tạo</th>
+						<th>Tình Trạng</th>
+						<th>Số Lượng</th>
+						<th>Thanh Toán</th>
+						<th>Ghi Chú</th>
+					</tr>
+					{% for order in orders %}
+					<tr>
+						<td><a href="/order/?code={{order.code}}&shop=yes&version=print">{{order.code}}</a></td>
+						<td>{{order.created|date:"d/m/Y H:i"}}</td>
+						<td style="text-align:center">{{order.confirm}}</td>
+						<td style="color:red;text-align:center">{{order.sum_quantity}}</td>
+						<td style="color:blue;text-align:center">{{order.sum_money|floatformat:3}}</td>
+						<td>{{order.note}}</td>
+					</tr>
+					{% endfor %}
+				</table>
+			
+			
+			</div>
+		{%endif%}
+		{% endblock %}

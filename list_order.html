@@ -1,0 +1,66 @@
+﻿{% extends "base_manage.html" %}
+	{%block title%}List Order{%endblock%}
+		
+		{%block content_header %}List Order{%endblock%}
+		{%block content_description %}{% endblock %}
+		
+		{%block content%}
+		<a name="main"></a>
+		<h2>{{ status }}</h2>
+		<form name="input" action="/order/list/#main" method="get">
+			<fieldset> <legend> Tùy Chọn </legend>
+				Hiển Thị: <select name="max">
+					<option value="20" {% ifequal request.max 20 %}selected{% endifequal %} >20</option>
+					<option value="50" {% ifequal request.max 50 %}selected{% endifequal %} >50</option>
+					<option value="100" {% ifequal request.max 100 %}selected{% endifequal %} >100</option>
+					<option value="200" {% ifequal request.max 200 %}selected{% endifequal %} >200</option>
+					</select>
+					 				Trang: <input type="text" size="5" name="page" value="{{request.page}}" />
+					<a href="/order/list/?max={{request.max}}&page={{request.page|add:"1"}}&confirm_filter={{request.confirm_filter}}&customer_filter={{request.customer_filter}}&item_filter={{request.item_filter}}&spec_filter={{request.spec_filter}}&show_hidden={{request.show_hidden}}#main">(next page)</a>
+									<br />
+				Tình Trạng: <select name="confirm_filter">
+					<option value="" >Tất Cả</option>
+					<option value="True" {% ifequal request.confirm_filter "True" %}selected{% endifequal %} >Đã Xác Nhận</option>
+					<option value="False" {% ifequal request.confirm_filter "False" %}selected{% endifequal %} >Chưa Xác Nhận</option>
+					</select>
+					Hiện Đơn Hàng Đã Xóa: <input type="checkbox" name="show_hidden" {% if request.show_hidden %}checked{% endif %} />  <br />
+						Tìm Theo Mã KH: <input type="text" size="20" name="customer_filter" value="{{request.customer_filter}}" /> <br />
+						Tìm Theo Mã Hàng: <input type="text" size="20" name="item_filter" value="{{request.item_filter}}" /> <br />
+						Tìm Theo Size/Màu: <input type="text" size="20" name="spec_filter" value="{{request.spec_filter}}" /> <br />
+					<input type="submit" value="Xem" />
+			</fieldset>	
+		</form> 	
+
+				
+		<table border="1" style="background-color: white;">
+			<tr>
+				<th>Mã Số</th>
+				<th>Ngày Tạo</th>
+				<th>Ngày Sửa</th>
+				<th>Tình Trạng</th>
+				<th>Số Lượng</th>
+				<th>Thanh Toán</th>
+				<th>Mã KH</th>
+				<th>Note</th>
+			</tr>
+			{% for order in orders %}
+			<tr>
+				<td><a href="/order/?code={{order.code}}#main">{{order.code}}</a></td>
+				<td>{{order.created|date:"d/m/Y H:i"}}</td>
+				<td>{{order.modified|date:"d/m/Y H:i"}}</td>
+				<td style="text-align:center">{% if order.confirm %}
+				Xác Nhận
+				{% else %}
+				Chưa
+				{% endif %}
+				</td>
+				<td style="color:red;text-align:center">{{order.sum_quantity}}</td>
+				<td style="color:blue;text-align:center">{{order.sum_money|floatformat:3}}</td>
+				<td><a href="/customer/?code={{order.customer}}">{{order.customer}}</td>
+				<td>{{order.note}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+			
+		{% endblock %}
+		

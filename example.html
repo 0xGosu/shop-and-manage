@@ -1,0 +1,35 @@
+<html>
+<title>ICT chat room {{room}}!</title>
+  <body>
+	<h2>ICT chat room {{room}}<h2>
+	{% if leftComment %}
+	.There are {{leftComment}} old comments. 
+		<a href="/?room={{room}}&maxcm=1000"> Click here to see all!</a>
+	{% endif %}
+	<br /> 
+	<a href="{{ url }}">Click here to {{ url_linktext }}</a> (nick name appears after login)
+	<hr />
+	{% for greeting in greetings %}
+      {% if greeting.author %}
+        <b>{{ greeting.author.nickname }}</b> 
+      {% else %}
+        <b></b> 
+      {% endif %}
+		Date={{ greeting.date.hour}}:{{ greeting.date.minute}} - {{ greeting.date.day}}/{{ greeting.date.month}}/{{ greeting.date.year}}UTC
+      <blockquote>{{ greeting.content|linebreaksbr }}</blockquote>
+    {% endfor %}
+
+    <form action="/sign?room={{room}}" method="post">
+      <div><textarea name="content" rows="3" cols="60"></textarea></div>
+      <div><input type="submit" value="Send message"></div>
+    </form>
+	<hr />
+	<form action="/" method="get">
+      <div><textarea name="room" rows="1" cols="20"></textarea></div>
+      <div><input type="submit" value="Change room"></div>
+    </form>
+
+    <a href="{{ url }}">{{ url_linktext }}</a>
+
+  </body>
+</html>

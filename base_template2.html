@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>{% block title %}{{title}}{% endblock %}</title>
+		<link rel="stylesheet" href="/css/template2/style.css" type="text/css" />
+		<!--[if IE 6]>
+			<link rel="stylesheet" href="/css/template2/ie6.css" type="text/css" />
+		<![endif]-->
+		<!--[if IE 7]>
+			<link rel="stylesheet" href="/css/template2/ie7.css" type="text/css" />
+		<![endif]-->
+	<script type="text/javascript" src="/files/shop_product.js"></script>
+	{% block head_extra %} 
+	{% endblock %}
+	</head>
+	<body>
+		<div class="header">
+			<div>
+				<a href="/index.html" id="logo"><img src="/images/logo.gif" alt="logo"/></a>
+				<div class="navigation">
+					<ul class="first">
+						<ul class="first">
+						<li class="first"><a href="/order/?shop=yes" id="wht2"><script type="text/javascript">
+					document.write(countItemInCart());				
+					</script> Sản Phẩm</a> Trong Giỏ Hàng</li>
+						<li><a href="/intro">Giới Thiệu Shop</a></li>
+						{% if user_class != "guest"  %}<li><a href="/user/">Tài Khoản</a></li>{% endif %}
+					</ul>
+					<ul>
+						<li>{{ url_linktext|safe }}</li>
+					</ul>
+				</div>
+				
+				<form name="search_top_bar" action="/product/" method="GET" class="search">
+				<input type="hidden" name="shop" value="yes">
+					<input type="text" name="code" value="tìm kiếm" onblur="this.value=!this.value?'search':this.value;" onfocus="this.select()" onclick="this.value='';"/>
+					<input type="submit" id="submit" value=""/>
+				</form>
+			</div>
+			<div id="navigation">
+				<ul>
+					<li {% if current_page == "home" %}class="selected"{%endif%}><a href="/index.html">Home</a></li>
+					<li {% if current_page == "new" %}class="selected"{%endif%}><a href="/product/list/?shop=new&sort_by=created">Hàng Mới Về</a></li>
+					<li {% if current_page == "female" %}class="selected"{%endif%}><a href="/product/list/?shop=yes&category_filter=NU_AO_KIEU">Thời Trang Nữ</a></li>
+					<li {% if current_page == "male" %}class="selected"{%endif%}><a href="/product/list/?shop=yes&category_filter=NAM_AO_THUN">Thời Trang Nam</a></li>
+					<li {% if current_page == "other" %}class="selected"{%endif%}><a href="/product/list/?shop=yes&category_filter=GIAY_DEP">Sản Phẩm Khác</a></li>
+					<li {% if current_page == "sale" %}class="selected"{%endif%}><a href="/product/list/?shop=sale&sort_by=on_sale">Hàng SALE</a></li>
+				</ul>
+			</div>
+		</div> 
+		<div class="body">
+			{% block body %}
+			{%endblock body%}
+			<div class="article">
+				<div class="first">
+					<h3>Thông Tin</h3>
+					<p>3/03/2012 - Khai trương Caramel-Shop. Giảm giá 20% cho tất cả các mặt hàng! <br/>
+		4/03/2012 -> 10/03  - Giảm giá 10% cho tất cả các mặt hàng! <br/>
+		11/03/2012 -> 03/04/2012  - Giảm giá 5% cho tất cả các mặt hàng!</p>
+					<br/>
+					<h3>Liên Hệ</h3>
+					<p>195 Lê Văn Thọ, P9, Q.Gò Vấp, Tp.HCM <a href="/intro">(xem bản đồ)</a><br/>
+						Tel: 0933.940.811 - 0122.264.3400<br/>
+						Email: <a href="mailto:caramel.shop2012@gmail.com">caramel.shop2012@gmail.com</a>
+					</p>
+				</div>
+				<div>
+					<h3>Liên Kết</h3>
+					<p></p>
+					<a href="mailto:tranvietanh1991@gmail.com" id="wht2">Website Developer</a>
+				</div>
+				<div class="connect">
+					<h2>Mạng Xã Hội</h2>
+					<a href="http://www.facebook.com/CaramelShop" id="facebook">Facebook</a>
+					<a href="http://twitter.com/" id="twitter">Twitter</a>
+					<a href="/" id="comments">Comments</a>
+					<a href="http://www.flickr.com/" id="flickr">Flickr</a>
+				</div>
+			</div>
+		</div>
+		<div class="footer">
+			<p>Copyright &copy; 2012 <a href="/" id="wht2">Caramel-Shop</a>. All Rights Reserve</p>
+		</div>
+	</body>
+</html>
